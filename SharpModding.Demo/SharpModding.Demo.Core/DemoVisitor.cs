@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SharpModding.Demo.Core
 {
@@ -16,37 +17,32 @@ namespace SharpModding.Demo.Core
             generator = new JavaFileGenerator(path);
         }
 
+        public async Task Finish()
+        {
+            generator.FinishFile();
+            await generator.WriteFile();
+        }
+
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
         {
-            generator.AddLine($"import {node.Name};", false);
+            generator.AddLine($"import {node.Name}");
             base.VisitUsingDirective(node);
+        }
+
+        public override void VisitExpressionStatement(ExpressionStatementSyntax node)
+        {
+            base.VisitExpressionStatement(node);
+        }
+
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            generator.AddMethod(node);
+            base.VisitMethodDeclaration(node);
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
-            StringBuilder line = new StringBuilder();
-
-            foreach (var item in node.Modifiers)
-            {
-                line.Append($"{item} ");
-            }
-            line.Append($"class {node.Identifier.ValueText}");
-
-            if (node.BaseList != null)
-            {
-                line.Append(" : ");
-
-                for (int i = 0; i < node.BaseList.Types.Count; i++)
-                {
-                    var item = node.BaseList.Types[i];
-                    line.Append(item.Type);
-                    if (i != node.BaseList.Types.Count - 1)
-                        line.Append(", ");
-                }
-
-            }
-            generator.AddLine(line.ToString(), true);
-
+            generator.AddClass(node);
             base.VisitClassDeclaration(node);
         }
     }
