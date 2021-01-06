@@ -1,6 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using SharpModding.Demo.Core;
+﻿using Microsoft.Extensions.Logging;
+using SharpModding.Demo.Converter;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,21 +8,24 @@ namespace SharpModding.Demo.Client
 {
     class Program
     {
+
         static async Task Main(string[] args)
         {
-            var vis = new DemoVisitor("./javaFile.java");
+            var path = "../../../../../DemoProject/DemoConsole/Program.cs";
 
-            var path = @"C:\Users\levi6\Documents\GitHub\SharpModding\DemoProject\DemoConsole\Program.cs";
+            var converter = new CSharpConverter();
 
-            var content = File.ReadAllText(path);
+            converter.AddServices<MemoryStream>(options => options.SetMinimumLevel(LogLevel.Debug).AddConsole());
 
-            var options = new CSharpParseOptions(LanguageVersion.CSharp8, DocumentationMode.None, SourceCodeKind.Regular);
-
-            var syntaxTree = CSharpSyntaxTree.ParseText(content, options).WithFilePath(path);
-
-            vis.Visit(syntaxTree.GetRoot());
-
-            await vis.Finish();
+            using (var stream = await converter.ConvertFile(path))
+            using (var reader = new StreamReader(stream))
+            {
+                await Task.Delay(100);
+                while (!reader.EndOfStream)
+                {
+                    Console.WriteLine(await reader.ReadLineAsync());
+                }
+            }
         }
     }
 }
