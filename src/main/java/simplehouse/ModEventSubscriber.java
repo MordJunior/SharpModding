@@ -17,7 +17,7 @@ public final class ModEventSubscriber {
     public static void onRegisterItems(RegistryEvent.Register<Item> event){
         Item.Properties prop = new Item.Properties();
         event.getRegistry().registerAll(
-                setup(new Item(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)),
+                setup(new ModItems.Simple_House(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)),
                         "simple_hut")
         );
     }
