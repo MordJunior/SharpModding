@@ -14,8 +14,5 @@ public class SimpleHouse {
 
     public static final Logger Logger = LogManager.getLogger(SimpleHouse.MODID);
 
-    public SimpleHouse(){
-        Logger.debug("Hello from example Mod!");
-    }
 
 }

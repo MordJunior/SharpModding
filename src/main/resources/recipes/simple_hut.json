@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " s ",
+    "s s",
+    "xdx"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "tag": "minecraft:cobblestone"
+    },
+    "d":
+    {
+      "item": "minecraft:oak_door"
+    },
+    "s":
+    {
+      "item": "minecraft:oak_stairs"
+    }
+  },
+  "result":
+  {
+    "item": "simplehouse:simple_hut"
+  }
+}
